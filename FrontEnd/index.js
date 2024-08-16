@@ -1,3 +1,5 @@
+import { showModal, closeModal } from "./modale/modale.js";
+
 // Récupération des works depuis l’API
 const response = await fetch("http://localhost:5678/api/works");
 const works = await response.json();
@@ -61,3 +63,68 @@ works.forEach((work) => {
   const figure = createFigure(work);
   gallery.appendChild(figure);
 });
+
+//token pour reconnaitre l'admin
+
+function isTokenValid() {
+  const token = localStorage.getItem("token");
+  if (token) {
+    return adminMode();
+  }
+  else {
+    console.log("token admin introuvable");
+  }
+}
+ //faire la fonction pour le mode admin
+// function adminMode() {
+//   //afficher le bandeau noir avec icone et mode edition
+//     //afficher l'icone modifier sur "Mes projets"
+//     const blackLine = document.createElement("div");
+//     blackLine.id = "blackLine";
+
+//     const projectIcon= document.createElement("div");
+//     projectIcon.id = "projectIcon";
+
+//     if (adminMode()=== true)  {
+//       return blackLine(), projectIcon();
+      
+
+  
+
+// }
+
+
+//MODALE 
+
+
+
+
+// Obtenir les éléments
+
+const openBtn = document.getElementById('openModalBtn');
+const closeBtn = document.getElementById('closeModalBtn');
+
+// Ouvrir la modale
+openBtn.onclick = function() {
+
+    showModal();
+    
+}
+
+const openBtn2 = document.getElementById('openModalBtn2');
+openBtn2.onclick = function() {
+    showModal();
+}
+
+// Fermer la modale
+closeBtn.onclick = function(event) {
+  
+    closeModal(event);
+}
+
+// Fermer la modale si l'utilisateur clique en dehors d'elle
+window.onclick = function(event) {
+closeModal(event);
+}
+
+

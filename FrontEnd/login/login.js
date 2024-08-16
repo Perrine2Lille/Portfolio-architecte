@@ -1,5 +1,4 @@
-// *****************************************************************************************************
-// LOGIQUE LOGIN
+
 const loginUrl = "http://localhost:5678/api/users/login";
 const inputEmail = document.getElementById("email");
 const inputPassword = document.getElementById("password");
@@ -7,73 +6,67 @@ const submitBtn = document.querySelector("input[type='submit']");
 const form = document.getElementById("loginForm");
 const loginError = document.querySelector(".loginError");
 const passwordError = document.querySelector(".passwordError");
-const logUser = {
+const userData = {
   email: "",
   password: "",
 };
-// *****************************************************************************************************
-//LOGIQUE contrôle du Log IN
-// Evenement au Submit
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+
+
+//creation des balises dans le html et leur fonction
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
   loginUser();
 });
-// Evenement au MAIL
-inputEmail.addEventListener("input", (e) => {
-  //inputEmail.setCustomValidity("nooooooo");
+
+inputEmail.addEventListener("input", (event) => {
   inputEmail.reportValidity();
-  logUser.email = e.target.value;
+  userData.email = event.target.value;
 });
-// Evenement au Password
-inputPassword.addEventListener("input", (e) => {
-  //inputEmail.setCustomValidity("nooooooo");
+
+inputPassword.addEventListener("input", (event) => {
   inputPassword.reportValidity();
-  logUser.password = e.target.value;
+  userData.password = event.target.value;
 });
-//Evenement au chargement du DOM**********************eeeeeeeeeeeeeeee
-document.addEventListener("DOMContentLoaded", (e) => {
-  e.preventDefault();
-  logUser.email = inputEmail.value;
-  logUser.password = inputPassword.value;
-  console.log(logUser);
+//chargement du DOM, preventdefault pour que cela ne bouge pas
+document.addEventListener("DOMContentLoaded", (event) => {
+  event.preventDefault();
+  userData.email = inputEmail.value;
+  userData.password = inputPassword.value;
+  console.log(userData);
 });
-// *****************************************************************************************************
-// Fetch la route user
+
+//Fonction qui fetch les users
 async function loginUser() {
   try {
-    await fetch(loginUrl, {
+    const response= await fetch(loginUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(logUser),
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        data = responseData;
+      body: JSON.stringify(userData),
+    });
+    const data = await response.json();
         console.log(data);
-      });
+
     if (data.message) {
-      loginError.textContent = "Erreur dans l’identifiant !!";
+      loginError.textContent = "Email inexistant";
       inputEmail.style.color = "red";
-      console.log(logUser);
+      
     } else if (data.error) {
-      passwordError.textContent = "Erreur dans le mot de passe !!";
+      passwordError.textContent = "Mot de passe invalide";
       loginError.textContent = "";
       inputPassword.style.color = "red";
       inputEmail.style.color = "#1D6154";
-      console.log(logUser);
+     
     } else {
       inputPassword.style.color = "#1D6154";
       passwordError.textContent = "";
       loginError.textContent = "";
-      console.log("LogAdmin OK");
-      console.log(logUser);
-      // stockage du token dans le stockage local
       localStorage.setItem("token", data.token);
-      //Redirection index.html
       window.location.href = "../index.html";
+      //si le token est bon, il passe dans le localstorage
+      // on revient à la page html de l'accueil
     }
   } catch (error) {
     console.log(error);
